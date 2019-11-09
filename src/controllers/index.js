@@ -1,9 +1,5 @@
-const Author = require('./Author');
-const Post = require('./Post');
-const Comments = require('./Comments');
+const User = require('./User');
 
 module.exports = {
-  Author,
-  Post,
-  Comments,
+  User,
 };

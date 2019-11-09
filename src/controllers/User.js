@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { Author } = require('../models');
+const { User } = require('../models');
 
-const url = 'http://localhost:3001/author';
+const url = 'http://localhost:3001/user';
 
 module.exports = {
   /**
@@ -11,9 +11,9 @@ module.exports = {
    */
   async index(req, res) {
     try {
-      const author = await Author.findAll();
+      const users = await User.findAll();
       return res.status(200).json({
-        data: author,
+        data: users,
         request: {
           type: 'GET',
           url,
@@ -35,40 +35,12 @@ module.exports = {
    * @param {Object} res
    */
   async store(req, res) {
-    const {
-      name, username, password, age,
-    } = req.body;
     try {
-      // AUTENTICAÇÃO
-      // if author exists
-      const isAuthor = await Author.findAll({ where: { username, password } });
-      if (isAuthor) {
-        return res.json({
-          error: 'Author already exists!',
-          request: {
-            type: 'POST',
-            url,
-          },
-        });
-      }
-
-      if ((username.lenght < 2) || (username === ' ') || (username !== username.typeof(Number)) || (username !== username.typeof(String))) {
-        return res.json({
-          error: 'Username invalid!',
-          request: {
-            type: 'POST',
-            url,
-          },
-        });
-      }
-      const author = await Author.create({
-        name,
-        username,
-        password,
-        age,
+      const user = await User.create({
+        ...req.body,
       });
-      return res.json({
-        data: author,
+      return res.status(200).json({
+        data: user,
         request: {
           type: 'POST',
           url,
@@ -90,13 +62,13 @@ module.exports = {
    * @param {Object} res
    */
   async login(req, res) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     try {
-      const author = await Author.findOne({ where: { username, password } });
+      const user = await User.findOne({ where: { email, password } });
 
-      if (!author) {
+      if (!user) {
         return res.status(404).json({
-          error: 'Author not found',
+          error: 'User not found',
           request: {
             type: 'POST',
             url: `${url}/login`,
@@ -104,7 +76,7 @@ module.exports = {
         });
       }
 
-      const token = jwt.sign({ author }, process.env.CHAVEJWT, {
+      const token = jwt.sign({ user }, process.env.CHAVEJWT, {
         expiresIn: '1h',
       });
 
@@ -131,26 +103,26 @@ module.exports = {
    * @param {Object} res
    */
   async update(req, res) {
-    const { id_author } = req.params;
+    const { id_user } = req.params;
     try {
-      const isAuthor = await Author.findByPk(id_author);
+      const isUser = await User.findByPk(id_user);
 
-      if (!isAuthor) {
+      if (!isUser) {
         return res.status(404).json({
-          error: 'Author not found',
+          error: 'User not found',
           request: {
             type: 'PUT/:id',
             url: `${url}/:id`,
           },
         });
       }
-      const [author] = await Author.update(
+      const [user] = await User.update(
         { ...req.body },
-        { where: { id: id_author }, returning: true },
+        { where: { id: id_user }, returning: true },
       );
 
       return res.status(200).json({
-        data: author[0],
+        data: user[0],
         request: {
           type: 'PUT/:id',
           url: `${url}/:id`,
@@ -172,22 +144,22 @@ module.exports = {
    * @param {Object} res
    */
   async destroy(req, res) {
-    const { id_author } = req.params;
+    const { id_user } = req.params;
     try {
-      const isAuthor = await Author.findByPk(id_author);
+      const isUser = await User.findByPk(id_user);
 
-      if (!isAuthor) {
+      if (!isUser) {
         return res.status(404).json({
-          error: 'Author not exists!',
+          error: 'User not exists!',
           request: {
             type: 'DELETE/:id',
             url: `${url}/:id`,
           },
         });
       }
-      await Author.destroy({ where: { id: id_author } });
+      await User.destroy({ where: { id: id_user } });
       return res.status(200).json({
-        data: 'Author deleted!',
+        data: 'User deleted!',
         content: {
           type: 'DELETE/:id',
           url: `${url}/:id`,
