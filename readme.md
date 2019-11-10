@@ -8,6 +8,11 @@
 
 ## Instalação
 
+Instalar dependencias 
+```bash
+yarn install
+```
+
 Copiar arquivo .env.example para .env
 ```bash
 cp .env.example .env
@@ -23,9 +28,9 @@ Criar tabelas
 yarn sequelize db:migrate
 ```
 
-Instalar dependencias 
+Criar seeds
 ```bash
-yarn install
+yarn sequelize db:seed:all
 ```
 
 ## Inicar
