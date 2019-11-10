@@ -6,19 +6,17 @@ class User extends Model {
       name: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      birthDate: DataTypes.DATE,
       phone: DataTypes.STRING,
-      createdAt: DataTypes.DATE,
+      birth_date: DataTypes.DATE,
     },
     {
       sequelize,
     });
   }
 
-  // static associate(models) {
-  //   // this.belongsTo(models.Post, { foreignKey: 'post_id', as: 'post' });
-  //   // this.belongsTo(models.Author, { foreignKey: 'author_id', as: 'author' });
-  // }
+  static associate(models) {
+    this.hasMany(models.Service, { foreignKey: 'user_id', as: 'service' });
+  }
 }
 
 module.exports = User;
