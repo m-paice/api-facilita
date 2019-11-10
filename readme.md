@@ -23,6 +23,8 @@ Criar containers docker
 docker-compose up -d
 ```
 
+## Banco de dados
+
 Criar tabelas
 ```bash
 yarn sequelize db:migrate
